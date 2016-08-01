@@ -185,25 +185,29 @@ public class NavigationFragment extends BaseFragment {
 
 
         TextView tvFindCourses = (TextView) layout.findViewById(R.id.drawer_option_find_courses);
-        tvFindCourses.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ISegment segIO = environment.getSegment();
-                segIO.trackUserFindsCourses();
-                FragmentActivity act = getActivity();
-                ((BaseFragmentActivity) act).closeDrawer();
-                if (!(act instanceof WebViewFindCoursesActivity || act instanceof NativeFindCoursesActivity)) {
-                    environment.getRouter().showFindCourses(act);
+        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+            tvFindCourses.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ISegment segIO = environment.getSegment();
+                    segIO.trackUserFindsCourses();
+                    FragmentActivity act = getActivity();
+                    ((BaseFragmentActivity) act).closeDrawer();
+                    if (!(act instanceof WebViewFindCoursesActivity || act instanceof NativeFindCoursesActivity)) {
+                        environment.getRouter().showFindCourses(act);
 
-                    //Finish need not be called if the current activity is MyCourseListing
-                    // as on returning back from FindCourses,
-                    // the student should be returned to the MyCourses screen
-                    if (!(act instanceof MyCoursesListActivity)) {
-                        act.finish();
+                        //Finish need not be called if the current activity is MyCourseListing
+                        // as on returning back from FindCourses,
+                        // the student should be returned to the MyCourses screen
+                        if (!(act instanceof MyCoursesListActivity)) {
+                            act.finish();
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            tvFindCourses.setVisibility(View.GONE);
+        }
 
         TextView tvSettings = (TextView) layout.findViewById(R.id.drawer_option_my_settings);
         tvSettings.setOnClickListener(new OnClickListener() {
