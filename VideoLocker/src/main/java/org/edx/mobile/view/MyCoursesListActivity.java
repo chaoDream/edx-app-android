@@ -127,18 +127,20 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
      */
     public void onEvent(@NonNull final NewVersionAvailableEvent newVersionAvailableEvent) {
         if (!newVersionAvailableEvent.isConsumed()) {
-            Snackbar.make(coordinatorLayout,
-                            newVersionAvailableEvent.getNotificationString(this),
-                            Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.app_version_update_button,
-                            AppStoreUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER)
-                    .setCallback(new Snackbar.Callback() {
+            final Snackbar snackbar = Snackbar.make(coordinatorLayout,
+                    newVersionAvailableEvent.getNotificationString(this),
+                    Snackbar.LENGTH_INDEFINITE);
+            if (AppStoreUtils.hasAppStore(this)) {
+                snackbar.setAction(R.string.app_version_update_button,
+                        AppStoreUtils.OPEN_APP_IN_APP_STORE_CLICK_LISTENER);
+            }
+            snackbar.setCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event) {
                             newVersionAvailableEvent.markAsConsumed();
                         }
-                    })
-                    .show();
+                    });
+            snackbar.show();
         }
     }
 }
