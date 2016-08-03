@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import org.edx.mobile.R;
-import org.edx.mobile.third_party.lang.BooleanUtils;
-import org.edx.mobile.third_party.lang.ObjectUtils;
 import org.edx.mobile.third_party.versioning.ArtifactVersion;
 
 import java.util.Date;
@@ -174,16 +172,31 @@ public class NewVersionAvailableEvent implements Comparable<NewVersionAvailableE
      */
     @Override
     public int compareTo(@NonNull final NewVersionAvailableEvent another) {
-        int result = BooleanUtils.compare(isUnsupported, another.isUnsupported);
-        if (result == 0) {
-            /* Reverse the comparator here, since the closer the date is, the higher the priority.
-             * Since we're reversing the result, the comparator is instructed to count a null value
-             * in the last supported date (non-deprecated new version availability event) as of
-             * higher priority than a non-null value (deprecation event).
-             */
-            result = 0 - ObjectUtils.compare(lastSupportedDate, another.lastSupportedDate, true);
+        int result;
+        if (isUnsupported != another.isUnsupported) {
+            result = isUnsupported ? 1 : -1;
+        } else {
+            if (lastSupportedDate == another.lastSupportedDate) {
+                result = 0;
+            } else if (lastSupportedDate == null) {
+                result = -1;
+            } else if (another.lastSupportedDate == null) {
+                result = 1;
+            } else {
+                // Reverse the comparison here, since the closer the date is, the higher the
+                // priority.
+                result = another.lastSupportedDate.compareTo(lastSupportedDate);
+            }
             if (result == 0) {
-                result = ObjectUtils.compare(newVersion, another.newVersion);
+                if (newVersion == another.newVersion) {
+                    result = 0;
+                } else if (newVersion == null) {
+                    result = -1;
+                } else if (another.newVersion == null) {
+                    result = 1;
+                } else {
+                    result = newVersion.compareTo(another.newVersion);
+                }
             }
         }
         return result;

@@ -7033,7 +7033,7 @@ public class ArrayUtils {
         final int n = array.length;
         for (int i = 1; i < n; i++) {
             final boolean current = array[i];
-            if (BooleanUtils.compare(previous, current) > 0) {
+            if (previous && !current) {
                 return false;
             }
 
