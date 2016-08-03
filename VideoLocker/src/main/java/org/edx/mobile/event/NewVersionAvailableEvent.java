@@ -171,8 +171,6 @@ public class NewVersionAvailableEvent implements Comparable<NewVersionAvailableE
      * @return a negative integer if this instance has lesser priority than {@code another};
      *         a positive integer if this instance has greater priority than {@code another};
      *         0 if this instance has the same priority as {@code another}.
-     * @throws ClassCastException if {@code another} cannot be converted into
-     *                            something comparable to {@code this} instance.
      */
     @Override
     public int compareTo(@NonNull final NewVersionAvailableEvent another) {
