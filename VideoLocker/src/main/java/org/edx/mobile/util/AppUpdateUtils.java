@@ -9,49 +9,52 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Toast;
 
-import org.edx.mobile.BuildConfig;
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 
 /**
- * Utility class for interacting with an app store, or the Play Store specifically.
+ * Utility class for updating the app.
  */
-public final class AppStoreUtils {
+public final class AppUpdateUtils {
     // Make this class non-instantiable
-    private AppStoreUtils() {
+    private AppUpdateUtils() {
         throw new UnsupportedOperationException();
     }
+
+    @Inject
+    private static Config config;
 
     /**
      * @param context A Context to query the applications info.
      *
-     * @return Whether there is any app store or web browser registered on the device.
+     * @return Whether there are any apps registered to handle the update URIs.
      */
-    public static boolean hasAppStore(@NonNull final Context context) {
+    public static boolean canUpdate(@NonNull final Context context) {
         final PackageManager packageManager = context.getPackageManager();
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        intent.setData(Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID));
+        final Config.AppUpdateUrisConfig appUpdateUrisConfig = config.getAppUpdateUrisConfig();
+        intent.setData(Uri.parse(appUpdateUrisConfig.getNativeUri()));
         if (intent.resolveActivity(packageManager) != null) return true;
-        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" +
-                BuildConfig.APPLICATION_ID));
+        intent.setData(Uri.parse(appUpdateUrisConfig.getWebUri()));
         return intent.resolveActivity(packageManager) != null;
     }
 
     /**
-     * Open an app store to display the app, or a web browser displaying it's web page if no app
-     * store is available.
+     * Open an native app or website on a web browser to update the app.
      *
      * @param context A Context for starting the new Activity.
      */
     public static void openAppInAppStore(@NonNull final Context context) {
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        intent.setData(Uri.parse("market://details?id=" + BuildConfig.APPLICATION_ID));
+        final Config.AppUpdateUrisConfig appUpdateUrisConfig = config.getAppUpdateUrisConfig();
+        intent.setData(Uri.parse(appUpdateUrisConfig.getNativeUri()));
         try {
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" +
-                            BuildConfig.APPLICATION_ID));
+            intent.setData(Uri.parse(appUpdateUrisConfig.getWebUri()));
             try {
                 context.startActivity(intent);
             } catch (ActivityNotFoundException e2) {

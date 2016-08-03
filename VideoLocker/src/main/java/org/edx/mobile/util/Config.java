@@ -2,6 +2,7 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -11,7 +12,9 @@ import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.squareup.phrase.Phrase;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.logger.Logger;
 
 import java.io.InputStream;
@@ -34,6 +37,10 @@ public class Config {
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
+    /* TODO: The naming and structure of this object is still under discussion,
+     * and hasn't been finalized or added to the config repositories yet.
+     */
+    private static final String APP_UPDATE_URIS = "APP_UPDATE_URIS";
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
@@ -59,6 +66,40 @@ public class Config {
     private static final String BADGES_ENABLED = "BADGES_ENABLED";
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     private static final String END_TO_END_TEST = "END_TO_END_TEST";
+
+    public static class AppUpdateUrisConfig {
+        @Nullable
+        @SerializedName("NATIVE")
+        private String nativeUri;
+
+        @Nullable
+        @SerializedName("WEB")
+        private String webUri;
+
+        public AppUpdateUrisConfig() {}
+
+        public AppUpdateUrisConfig(@NonNull final String nativeUri, @NonNull final String webUri) {
+            this.nativeUri = nativeUri;
+            this.webUri = webUri;
+        }
+
+        @Nullable
+        public String getNativeUri() {
+            return formatApplicationId(nativeUri);
+        }
+
+        @Nullable
+        public String getWebUri() {
+            return formatApplicationId(webUri);
+        }
+
+        private static String formatApplicationId(@NonNull final String uri) {
+            return Phrase.from(uri)
+                    .put("application_id", BuildConfig.APPLICATION_ID)
+                    .format()
+                    .toString();
+        }
+    }
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -467,6 +508,11 @@ public class Config {
     @NonNull
     public EndToEndConfig getEndToEndConfig() {
         return getObjectOrNewInstance(END_TO_END_TEST, EndToEndConfig.class);
+    }
+
+    @NonNull
+    public AppUpdateUrisConfig getAppUpdateUrisConfig() {
+        return getObjectOrNewInstance(APP_UPDATE_URIS, AppUpdateUrisConfig.class);
     }
 
     @NonNull
