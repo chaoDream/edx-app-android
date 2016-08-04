@@ -45,8 +45,7 @@ public class NewVersionBroadcastInterceptor implements Interceptor {
         final Date lastSupportedDate = DateUtil.convertToDate(
                 response.header(HEADER_APP_VERSION_LAST_SUPPORTED_DATE));
 
-        // TODO: Create a utility class that defines all HTTP errors as constants.
-        final boolean isUnsupported = response.code() == 426;
+        final boolean isUnsupported = response.code() == HttpStatus.UPGRADE_REQUIRED;
 
         // If any of these properties is available and valid, then broadcast the
         // event with the information we have.

@@ -22,6 +22,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import org.edx.mobile.R;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.event.SessionIdRefreshEvent;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.course.CourseComponent;
@@ -32,7 +33,6 @@ import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
-import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,9 +101,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
                                                     WebResourceResponse errorResponse) {
                         didReceiveError = true;
                         switch (errorResponse.getStatusCode()) {
-                            case HttpURLConnection.HTTP_FORBIDDEN:
-                            case HttpURLConnection.HTTP_UNAUTHORIZED:
-                            case HttpURLConnection.HTTP_NOT_FOUND:
+                            case HttpStatus.FORBIDDEN:
+                            case HttpStatus.UNAUTHORIZED:
+                            case HttpStatus.NOT_FOUND:
                                 EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
                                 break;
                         }
