@@ -268,21 +268,12 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     }
 
     @Override
-    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
+    public boolean showErrorMessage(String header, String message) {
         if (message != null) {
-            return super.showErrorMessage(header, message, isPersistent);
+            return super.showErrorMessage(header, message);
         } else {
-            return super.showErrorMessage(header, getString(R.string.login_failed), isPersistent);
+            return super.showErrorMessage(header, getString(R.string.login_failed));
         }
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Animation errorMessageAnim = activityLoginBinding.errorLayout.getAnimation();
-        if (errorMessageAnim == null || errorMessageAnim.hasEnded()) {
-            ViewAnimationUtil.hideMessageBar(activityLoginBinding.errorLayout);
-        }
-        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -294,8 +285,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     @Override
     protected void onOffline() {
         super.onOffline();
-        showErrorMessage(getString(R.string.no_connectivity),
-                getString(R.string.network_not_connected), false);
+        showErrorMessage(getString(R.string.no_connectivity), getString(R.string.network_not_connected));
     }
 
     @Override

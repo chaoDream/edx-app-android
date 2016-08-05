@@ -445,11 +445,11 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     @Override
-    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
+    public boolean showErrorMessage(String header, String message) {
         if (message != null) {
-            return super.showErrorMessage(header, message, isPersistent);
+            return super.showErrorMessage(header, message);
         } else {
-            return super.showErrorMessage(header, getString(R.string.login_failed), isPersistent);
+            return super.showErrorMessage(header, getString(R.string.login_failed));
         }
     }
 
