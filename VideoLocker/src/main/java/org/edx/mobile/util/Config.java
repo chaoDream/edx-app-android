@@ -1,8 +1,8 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -37,9 +37,6 @@ public class Config {
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
-    /* TODO: The naming and structure of this object is still under discussion,
-     * and hasn't been finalized or added to the config repositories yet.
-     */
     private static final String APP_UPDATE_URIS = "APP_UPDATE_URIS";
 
     /* Composite configuration keys */
@@ -66,40 +63,6 @@ public class Config {
     private static final String BADGES_ENABLED = "BADGES_ENABLED";
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     private static final String END_TO_END_TEST = "END_TO_END_TEST";
-
-    public static class AppUpdateUrisConfig {
-        @Nullable
-        @SerializedName("NATIVE")
-        private String nativeUri;
-
-        @Nullable
-        @SerializedName("WEB")
-        private String webUri;
-
-        public AppUpdateUrisConfig() {}
-
-        public AppUpdateUrisConfig(@NonNull final String nativeUri, @NonNull final String webUri) {
-            this.nativeUri = nativeUri;
-            this.webUri = webUri;
-        }
-
-        @Nullable
-        public String getNativeUri() {
-            return formatApplicationId(nativeUri);
-        }
-
-        @Nullable
-        public String getWebUri() {
-            return formatApplicationId(webUri);
-        }
-
-        private static String formatApplicationId(@NonNull final String uri) {
-            return Phrase.from(uri)
-                    .put("application_id", BuildConfig.APPLICATION_ID)
-                    .format()
-                    .toString();
-        }
-    }
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -426,6 +389,25 @@ public class Config {
         return getString(OAUTH_CLIENT_ID);
     }
 
+    /**
+     * @return A list of URIs for updating the app, or an empty list if none are available.
+     */
+    @NonNull
+    public List<Uri> getAppUpdateUris() {
+        //noinspection unchecked
+        final List<String> uriStrings = getObjectOrNewInstance(APP_UPDATE_URIS, ArrayList.class);
+        final List<Uri> uris = new ArrayList<>(uriStrings.size());
+        for (final String uriString : uriStrings) {
+            if (uriString != null) {
+                uris.add(Uri.parse(Phrase.from(uriString)
+                        .put("application_id", BuildConfig.APPLICATION_ID)
+                        .format()
+                        .toString()));
+            }
+        }
+        return uris;
+    }
+
     public boolean isNotificationEnabled() {
         return getBoolean(PUSH_NOTIFICATIONS_FLAG, false);
     }
@@ -508,11 +490,6 @@ public class Config {
     @NonNull
     public EndToEndConfig getEndToEndConfig() {
         return getObjectOrNewInstance(END_TO_END_TEST, EndToEndConfig.class);
-    }
-
-    @NonNull
-    public AppUpdateUrisConfig getAppUpdateUrisConfig() {
-        return getObjectOrNewInstance(APP_UPDATE_URIS, AppUpdateUrisConfig.class);
     }
 
     @NonNull

@@ -72,9 +72,10 @@
     <string name="app_version_outdated">A new version of the app is available.</string>
     <!-- Snackbar action button label for opening an app store to upgrade the app to the latest version -->
     <string name="app_version_update_button">Update</string>
-    <!-- Toast notification for when the user presses the upgrade action button from the Snackbar
-         notifications while no app store or browser is installed on the device -->
-    <string name="app_version_upgrade_app_store_unavailable">Google Play Store not found on device.</string>
+    <!-- Toast notification for when the user presses the update action button from the Snackbar
+         notifications while no supported app store or browser is installed on the device with which
+         the app could be updated -->
+    <string name="app_version_upgrade_app_store_unavailable">No supported app store found on device.</string>
 
     <!-- Registration Error Messages -->
 
