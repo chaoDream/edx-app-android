@@ -1,7 +1,6 @@
 package org.edx.mobile.base;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -324,7 +323,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
+        // Pass any configuration change to the drawer toggles
         if (mDrawerToggle != null) {
             mDrawerToggle.onConfigurationChanged(newConfig);
         }
@@ -405,6 +404,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      *
      * @param event
      */
+    @SuppressWarnings("unused")
     public void onEvent(LogoutEvent event) {
         finish();
     }
@@ -414,6 +414,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      *
      * @param event
      */
+    @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
 
         logger.debug("network state changed");
@@ -526,14 +527,9 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         alertDialog = new AlertDialog.Builder(this)
                 .setTitle(header)
                 .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
+                .setPositiveButton(android.R.string.ok, null)
                 .create();
+        alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
         return true;
     }
