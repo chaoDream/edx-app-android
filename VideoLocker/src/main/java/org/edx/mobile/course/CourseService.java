@@ -1,11 +1,11 @@
 package org.edx.mobile.course;
 
-import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.Page;
 
-import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface CourseService {
     /**
@@ -20,9 +20,9 @@ public interface CourseService {
      *                 Which page to fetch. If not given, defaults to page 1
      */
     @GET("/api/courses/v1/courses/")
-    Page<CourseDetail> getCourseList(@Query("username") String username,
-                                     @Query("mobile") boolean mobile,
-                                     @Query("page") int page) throws HttpException;
+    Call<Page<CourseDetail>> getCourseList(@Query("username") String username,
+                                           @Query("mobile") boolean mobile,
+                                           @Query("page") int page);
 
     /**
      * @param courseId (optional):
@@ -36,5 +36,5 @@ public interface CourseService {
      *                 requested by an Anonymous user.
      */
     @GET("/api/courses/v1/courses/{course_id}")
-    CourseDetail getCourseDetail(@Path("course_id") String courseId, @Query("username") String username) throws HttpException;
+    Call<CourseDetail> getCourseDetail(@Path("course_id") String courseId, @Query("username") String username);
 }

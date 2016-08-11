@@ -4,11 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.HttpConnectivityException;
 import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 
 public enum ErrorUtils {
@@ -19,7 +19,7 @@ public enum ErrorUtils {
     @NonNull
     public static String getErrorMessage(@NonNull Throwable ex, @NonNull Context context) {
         String errorMessage = null;
-        if (ex instanceof HttpConnectivityException) {
+        if (ex instanceof IOException) {
             if (NetworkUtil.isConnected(context)) {
                 errorMessage = context.getString(R.string.network_connected_error);
             } else {

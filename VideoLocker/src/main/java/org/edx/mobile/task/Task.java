@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.google.inject.Inject;
 
@@ -36,7 +35,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     @Nullable
     private WeakReference<TaskMessageCallback> messageCallback;
 
-    private ProgressBar progressBar;
+    private View progressView;
 
     @Inject
     protected IEdxEnvironment environment;
@@ -56,9 +55,9 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
         this.taskType = type;
     }
 
-    public void setProgressDialog(@Nullable ProgressBar progressBar) {
-        this.progressBar = progressBar;
-        if (progressBar != null) {
+    public void setProgressDialog(@Nullable View progressView) {
+        this.progressView = progressView;
+        if (progressView != null) {
             this.progressCallback = null;
         }
     }
@@ -73,7 +72,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
             progressCallback = null;
         } else {
             progressCallback = new WeakReference<>(callback);
-            progressBar = null;
+            progressView = null;
         }
     }
 
@@ -93,8 +92,8 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
 
     @Override
     protected void onPreExecute() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
+        if (progressView != null) {
+            progressView.setVisibility(View.VISIBLE);
         }
         final TaskProgressCallback callback = getProgressCallback();
         if (callback != null) {
@@ -108,8 +107,8 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     }
 
     protected void stopProgress() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
+        if (progressView != null) {
+            progressView.setVisibility(View.GONE);
         }
         final TaskProgressCallback callback = getProgressCallback();
         if (callback != null) {
