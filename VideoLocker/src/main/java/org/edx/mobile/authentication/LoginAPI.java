@@ -8,6 +8,8 @@ import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.HttpResponseStatusException;
@@ -25,6 +27,7 @@ import org.edx.mobile.util.observer.Observable;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
 import retrofit.RestAdapter;
 
 @Singleton
@@ -135,6 +138,11 @@ public class LoginAPI {
         }
         notificationDelegate.resubscribeAll();
         logInEvents.sendData(new LogInEvent());
+    }
+
+    public void logOut(@NonNull final String refreshToken) throws HttpException {
+        loginService.revokeAccessToken(config.getOAuthClientId(),
+                refreshToken, ApiConstants.TOKEN_TYPE_REFRESH);
     }
 
     @NonNull

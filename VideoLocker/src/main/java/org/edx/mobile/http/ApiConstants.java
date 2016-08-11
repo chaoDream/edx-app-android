@@ -1,9 +1,13 @@
 package org.edx.mobile.http;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public class ApiConstants {
     public static final String COURSE_ID = "courseId";
@@ -23,6 +27,14 @@ public class ApiConstants {
     public static final String URL_PASSWORD_RESET = "/password_reset/";
 
     public static final String URL_EXCHANGE_ACCESS_TOKEN = "/oauth2/exchange_access_token/{" + GROUP_ID + "}/";
+
+    public static final String URL_REVOKE_TOKEN = "/oauth2/revoke_token/";
+
+    public static final String TOKEN_TYPE_ACCESS = "access_token";
+    public static final String TOKEN_TYPE_REFRESH = "refresh_token";
+    @StringDef({TOKEN_TYPE_ACCESS, TOKEN_TYPE_REFRESH})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TokenType {}
 
     public static final String URL_LAST_ACCESS_FOR_COURSE ="/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
 

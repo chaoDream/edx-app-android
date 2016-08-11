@@ -22,6 +22,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.profiles.UserProfileActivity;
+import org.edx.mobile.task.LogoutTask;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.dialog.WebViewDialogActivity;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
@@ -256,6 +257,8 @@ public class Router {
      * or programmatically
      */
     public void forceLogout(Context context, ISegment segment, NotificationDelegate delegate) {
+        LogoutTask.executeInstance(context);
+
         MainApplication.getEnvironment(context).getLoginPrefs().clear();
 
         EventBus.getDefault().post(new LogoutEvent());
