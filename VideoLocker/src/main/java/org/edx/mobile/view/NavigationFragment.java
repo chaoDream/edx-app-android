@@ -65,7 +65,6 @@ public class NavigationFragment extends BaseFragment {
     LoginPrefs loginPrefs;
 
     private final Logger logger = new Logger(getClass().getName());
-    private NetworkCheckDialogFragment newFragment;
 
     private IUiLifecycleHelper uiLifecycleHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
@@ -313,26 +312,6 @@ public class NavigationFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void updateWifiSwitch(View layout) {
-        final PrefManager wifiPrefManager = new PrefManager(
-                getActivity().getBaseContext(), PrefManager.Pref.WIFI);
-        Switch wifi_switch = (Switch) layout.findViewById(R.id.wifi_setting);
-
-        wifi_switch.setOnCheckedChangeListener(null);
-        wifi_switch.setChecked(wifiPrefManager.getBoolean(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true));
-        wifi_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true);
-                } else {
-                    showWifiDialog();
-                }
-            }
-        });
-    }
-
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (event.getUsername().equalsIgnoreCase(profile.username)) {
@@ -359,39 +338,5 @@ public class NavigationFragment extends BaseFragment {
                 loadProfileImage(account.getProfileImage(), imageView);
             }
         }
-    }
-
-    protected void showWifiDialog() {
-        newFragment = NetworkCheckDialogFragment.newInstance(getString(R.string.wifi_dialog_title_help), getString(R.string.wifi_dialog_message_help), new IDialogCallback() {
-            @Override
-            public void onPositiveClicked() {
-                try {
-                    PrefManager wifiPrefManager = new PrefManager
-                            (getActivity().getBaseContext(), PrefManager.Pref.WIFI);
-                    wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, false);
-                    updateWifiSwitch(getView());
-                } catch (Exception ex) {
-                    logger.error(ex);
-                }
-            }
-
-            @Override
-            public void onNegativeClicked() {
-                try {
-                    PrefManager wifiPrefManager = new PrefManager(
-                            getActivity().getBaseContext(), PrefManager.Pref.WIFI);
-
-                    wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true);
-                    wifiPrefManager.put(PrefManager.Key.DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG, true);
-
-                    updateWifiSwitch(getView());
-                } catch (Exception ex) {
-                    logger.error(ex);
-                }
-            }
-        });
-        newFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        newFragment.show(getFragmentManager(), "dialog");
-        newFragment.setCancelable(false);
     }
 }
