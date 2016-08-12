@@ -106,7 +106,7 @@ public class NavigationFragment extends BaseFragment {
         drawerNavigationBinding = DataBindingUtil.inflate(inflater, R.layout.drawer_navigation, container, false);
         if (config.isUserProfilesEnabled()) {
             if (null != profileImage) {
-                loadProfileImage(profileImage, imageView);
+                loadProfileImage(profileImage, drawerNavigationBinding.profileImage);
             }
             if (profile != null && profile.username != null) {
                 drawerNavigationBinding.nameLayout.setOnClickListener(new OnClickListener() {
@@ -126,7 +126,7 @@ public class NavigationFragment extends BaseFragment {
                 });
             }
         } else {
-            imageView.setVisibility(View.GONE);
+            drawerNavigationBinding.profileImage.setVisibility(View.GONE);
 
             // Disable any on-tap effects
             drawerNavigationBinding.nameLayout.setClickable(false);
