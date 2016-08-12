@@ -286,10 +286,6 @@ public class NavigationFragment extends BaseFragment {
         uiLifecycleHelper.onSaveInstanceState(outState);
     }
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (event.getUsername().equalsIgnoreCase(profile.username)) {
